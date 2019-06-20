@@ -29,6 +29,7 @@ This repo captures artifacts, documentation and issues for the Nabto5 Beta1 rele
 * Connections is leaked in the device if they are not closed properly.
 * Client shutdown hangs for connections only living a few milliseconds.
 * The client does not come with an integrated mdns client yet.
+* For an android demo, see the beta1 repository.
 
 
 Note on iOS clients: Your project must include a file with extension .mm to trigger Objective C++ builds, in turn to trigger the C++ runtime to be linked into the applications, needed by the Nabto static client library. For future releases, a higher level wrapper than what is currently provided will ensure this. The clang's libc++ runtime must be chosen (normally the default), not GCC's (libstdc++).

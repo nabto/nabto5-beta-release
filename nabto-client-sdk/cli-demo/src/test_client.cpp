@@ -178,6 +178,8 @@ int main(int argc, char** argv) {
     std::string privateKey(MAX_KEY_PEM_SIZE, '\0');
     std::string testType;
     std::string logLevel = "info";
+    std::string deviceHostname;
+    uint16_t devicePort;
 
     try
     {
@@ -190,6 +192,8 @@ int main(int argc, char** argv) {
             ("k,keyfile", "Path to file containing a private key", cxxopts::value<std::string>())
             ("t,testtype", "test to run (values: stream-echo, stream-ping, coap-get, coap-post", cxxopts::value<std::string>())
             ("l,loglevel", "set the loglevel, info|trace|error|warning", cxxopts::value<std::string>())
+            ("o,device-hostname", "set the device hostname for local direct connections", cxxopts::value<std::string>())
+            ("q,device-port", "set the device port for local direct connections", cxxopts::value<uint16_t>())
             ("h,help", "Shows this help text");
         options.parse(argc, argv);
 
@@ -243,7 +247,13 @@ int main(int argc, char** argv) {
         if (options.count("loglevel")) {
             logLevel = options["loglevel"].as<std::string>();
         }
+
+        if (options.count("device-hostname") && options.count("device-port")) {
+            deviceHostname = options["device-hostname"].as<std::string>();
+            devicePort = options["device-port"].as<uint16_t>();
+        }
     }
+
     catch (const cxxopts::OptionException& e)
     {
         std::cout << "Error parsing options: " << e.what() << std::endl;
@@ -261,6 +271,12 @@ int main(int argc, char** argv) {
 
     NabtoClientConnectionPtr connection(nabto_client_connection_new(context.get()));
     std::cout << "created new connection" << std::endl;
+
+    if (!deviceHostname.empty()) {
+        nabto_client_connection_enable_direct_candidates(connection.get());
+        nabto_client_connection_add_direct_candidate(connection.get(), deviceHostname.c_str(), devicePort);
+        nabto_client_connection_end_of_direct_candidates(connection.get());
+    }
 
     NabtoClientError ec;
     ec = nabto_client_connection_set_server_url(connection.get(), host.c_str());

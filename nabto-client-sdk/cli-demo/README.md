@@ -72,3 +72,15 @@ obtained through the Nabto cloud console.
 ```
 ./test_client -H https://a.clients.dev.nabto.net -d de-tsxiqkt9 -p pr-3tayzujn -s sk-e918d713537077c409450a723cc06da7 -k key.pem -t stream-echo
 ```
+
+
+## Using discovery of local devices.
+
+Discover the device you will connect locally to with a mdns resolver,
+search for a _nabto._udp service with the correct product and device
+id.
+
+Use the device hostname and port as options to the test client and it
+will make a local connection to the device.
+
+e.g. scan with `avahi-browse -a -r`

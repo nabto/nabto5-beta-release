@@ -242,6 +242,11 @@ void run_device()
         return;
     }
 
+    ec = nabto_device_set_local_port(dev, 4242);
+    if (ec != NABTO_DEVICE_EC_OK) {
+        return;
+    }
+
     printf("Starting device productid: %s, deviceid: %s, fingerprint: %s" NEWLINE, config.productId, config.deviceId, fingerprint);
 
     ec = nabto_device_start(dev);

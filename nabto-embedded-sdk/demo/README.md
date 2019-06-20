@@ -48,3 +48,12 @@ device should now attach successfully to the Nabto basestation.
 
 Once the device has successfully attached, the Nabto client SDK demo
 from this repository can be used to connect to the device.
+
+## publish the service to mdns
+
+Use your favorite mdns service publisher.
+
+e.g. avahi
+avahi-publish-service -s <hostname> _nabto._udp <port> deviceId=<de-....> productId=<pr-....>
+
+Set local port to something specific with `nabto_device_set_local_port` or get the port used with `nabto_device_get_local_port`

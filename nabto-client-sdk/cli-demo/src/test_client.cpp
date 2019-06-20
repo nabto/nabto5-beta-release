@@ -70,6 +70,14 @@ void stream_echo(NabtoClientConnectionPtr connection) {
     NabtoClientFuturePtr streamCloseFuture(nabto_client_stream_close(stream.get()));
     nabto_client_future_wait(streamCloseFuture.get());
 
+
+    // wait for the fin from the other end.
+    NabtoClientFuturePtr streamReadCloseFuture(nabto_client_stream_read_some(stream.get(),
+                                                                             output.data(),
+                                                                             output.size(),
+                                                                             &transferred));
+    nabto_client_future_wait(streamReadCloseFuture.get());
+
     std::cout << "Stream closed" << std::endl;
     close_connection(std::move(connection));
 }
@@ -157,6 +165,11 @@ void coap_post(NabtoClientConnectionPtr connection) {
 
 }
 
+void logCallback(const NabtoClientLogMessage* log, void* userData)
+{
+    std::cout << log->message << std::endl;
+}
+
 int main(int argc, char** argv) {
     std::string host;
     std::string deviceId;
@@ -164,6 +177,7 @@ int main(int argc, char** argv) {
     std::string serverKey;
     std::string privateKey(MAX_KEY_PEM_SIZE, '\0');
     std::string testType;
+    std::string logLevel = "info";
 
     try
     {
@@ -175,6 +189,7 @@ int main(int argc, char** argv) {
             ("s,serverkey", "Server key of the app", cxxopts::value<std::string>())
             ("k,keyfile", "Path to file containing a private key", cxxopts::value<std::string>())
             ("t,testtype", "test to run (values: stream-echo, stream-ping, coap-get, coap-post", cxxopts::value<std::string>())
+            ("l,loglevel", "set the loglevel, info|trace|error|warning", cxxopts::value<std::string>())
             ("h,help", "Shows this help text");
         options.parse(argc, argv);
 
@@ -224,6 +239,10 @@ int main(int argc, char** argv) {
         } else {
             die("no key file provided", options);
         }
+
+        if (options.count("loglevel")) {
+            logLevel = options["loglevel"].as<std::string>();
+        }
     }
     catch (const cxxopts::OptionException& e)
     {
@@ -234,6 +253,11 @@ int main(int argc, char** argv) {
     std::cout << "connecting to " << productId << "." << deviceId << " using client_lb_host: " << host << std::endl;
 
     NabtoClientContextPtr context(nabto_client_context_new());
+
+    if (!logLevel.empty()) {
+        nabto_client_log_set_level(context.get(), logLevel.c_str());
+        nabto_client_log_set_callback(context.get(), &logCallback, NULL);
+    }
 
     NabtoClientConnectionPtr connection(nabto_client_connection_new(context.get()));
     std::cout << "created new connection" << std::endl;

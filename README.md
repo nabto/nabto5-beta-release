@@ -11,25 +11,25 @@ This repo captures artifacts, documentation and issues for the Nabto5 Beta1 rele
 * Client app CLI demo (full source code).
 * iOS app (full source and project).
 
-Note the iOS static lib is delivered as a bzip2 archive due to its size, so unpack in `nabto-client-sdk/lib` before use.
-
 ## Improvements over Beta 1 release
 
 * Error Codes in the client is implemented
 * Logging in the client is implemented
 * Local discovery functionality is addded to the client.
-* Documented local discovery functionality.
-* Several fixes of stuff in various parts.
+* Several fixes and fixes in various parts.
+* The local discovery protocol is documented in doc/local_discovery.md
+* Local discovery has been added to the readme of the `test_device` and `test_client`.
 
 ## Limitations and known issues in the second beta release
 
-* The device is unstable.
 * No association between console users and domains - all console users have access to all Nabto5 entities created in the system. So this means that you should not add any potentially business sensitive information as e.g. product names.
 * API error codes in the device is not fully implemented. For now, just check for `NABTO_DEVICE_OK` when checking for success, detailed error codes when status is not OK cannot yet be fully trusted (but will be different than the OK codes in case of error).
 * Documentation is limited to annotation in header files.
-* Memory leak in iOS client library when establishing a new connection.
 * Device id and product id for embedded devices is not validated in the basestation during attach (against the values entered in the console), only the device's public key is validated.
-* Timeouts in some situations where an explicit immediate error should be reported instead, for instance if connecting to an offline device.
+* Connections is leaked in the device if they are not closed properly.
+* Client shutdown hangs for connections only living a few milliseconds.
+* The client does not come with an integrated mdns client yet.
+
 
 Note on iOS clients: Your project must include a file with extension .mm to trigger Objective C++ builds, in turn to trigger the C++ runtime to be linked into the applications, needed by the Nabto static client library. For future releases, a higher level wrapper than what is currently provided will ensure this. The clang's libc++ runtime must be chosen (normally the default), not GCC's (libstdc++).
 

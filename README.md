@@ -1,7 +1,7 @@
 # Nabto 5 Beta2 Release
 This repo captures artifacts, documentation and issues for the Nabto5 Beta1 release.
 
-## Deliverables in the seconds beta release
+## Deliverables in the second beta release
 
 * Embedded SDK for building device applications. Delivered as precompiled libraries for Linux and macOS in this release; full source will be provided later.
 * Client SDK for building client apps. Delivered as precompiled libraries now and in the future. Currently libs for iOS, Android, macOS and Linux are provided (see known limitations below).

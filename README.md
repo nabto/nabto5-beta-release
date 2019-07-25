@@ -1,5 +1,5 @@
 # Nabto 5 Beta2 Release
-This repo captures artifacts, documentation and issues for the Nabto5 Beta1 release.
+This repo captures artifacts, documentation and issues for the Nabto5 Beta2 release.
 
 ## Deliverables in the second beta release
 

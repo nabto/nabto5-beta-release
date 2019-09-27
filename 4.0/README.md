@@ -13,7 +13,7 @@
  * User experience updates in the could console
  
 ## Limitations and known issues in this release
-  * API error codes in the device is not fully implemented. For now,
+  * API error codes in the device are not fully implemented. For now,
     just check for `NABTO_DEVICE_OK` when checking for success,
     detailed error codes when status is not OK cannot yet be fully
     trusted (but will be different than the OK codes in case of
@@ -26,8 +26,8 @@
 
 ## Getting started
 
-To get started using this release, first build both SDK's, then try
-each example.
+To get started using this release, first build both SDKs, then try
+each example. Note when cloning this repo, do it recursively (`git --recursive clone ...`). Or use `git submodule update --init` after cloning.
 
 ### building embedded SDK
 ```

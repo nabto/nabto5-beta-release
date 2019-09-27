@@ -88,14 +88,28 @@ bool init_heat_pump(const std::string& configFile, const std::string& productId,
     NabtoDeviceError ec;
 
     char* str;
+    char* fp;
     ec = nabto_device_experimental_util_create_private_key(device, &str);
     std::string privateKey(str);
-    nabto_device_string_free(str);
 
     if (ec) {
         std::cerr << "Error creating private key" << std::endl;
         return false;
     }
+    ec = nabto_device_set_private_key(device, str);
+    if (ec) {
+        std::cerr << "Error setting private key" << std::endl;
+        return false;
+    }
+    ec = nabto_device_get_device_fingerprint_hex(device, &fp);
+    if (ec) {
+        std::cerr << "Error getting Fingerprint" << std::endl;
+        return false;
+    }
+
+    std::cout << "Created new private key with fingerprint: " << fp << std::endl;
+    nabto_device_string_free(fp);
+    nabto_device_string_free(str);
 
 
     config["PrivateKey"] = privateKey;
@@ -173,6 +187,16 @@ void run_heat_pump(const std::string& configFile)
     ec = nabto_device_log_set_std_out_callback(device);
     if (ec) {
         std::cerr << "Failed to enable stdour logging" << std::endl;
+    }
+
+    try {
+        auto serverPort = config["ServerPort"].get<uint16_t>();
+        ec = nabto_device_set_server_port(device, serverPort);
+        if (ec) {
+            std::cerr << "Failed to set server port" << std::endl;
+        }
+    } catch (std::exception& e) {
+
     }
 
     // run application

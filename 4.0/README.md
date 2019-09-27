@@ -13,13 +13,21 @@
  * User experience updates in the could console
  
 ## Limitations and known issues in this release
-  * API error codes in the device is not fully implemented. For now, just check for `NABTO_DEVICE_OK` when checking for success, detailed error codes when status is not OK cannot yet be fully trusted (but will be different than the OK codes in case of error).
+  * API error codes in the device is not fully implemented. For now,
+    just check for `NABTO_DEVICE_OK` when checking for success,
+    detailed error codes when status is not OK cannot yet be fully
+    trusted (but will be different than the OK codes in case of
+    error).
   * Documentation is limited to annotation in header files.
-  * Device id and product id for embedded devices is not validated in the basestation during attach (against the values entered in the console), only the device's public key is validated.
+  * Device id and product id for embedded devices is not validated in
+    the basestation during attach (against the values entered in the
+    console), only the device's public key is validated.
+  * Tunnels are leaked when a connection closes.
 
 ## Getting started
 
-To get started using this release, first build both SDK's, then try each example.
+To get started using this release, first build both SDK's, then try
+each example.
 
 ### building embedded SDK
 ```
@@ -36,6 +44,15 @@ cd nabto-client-sdk/build
 cmake ..
 make -j
 ```
+
+### Note on local connections
+When running the examples, a App Server Key is required on the client,
+and the device fingerprint must be registered on the basestation. If
+the App Server Key is invalid, the client will not be allowed access
+to the basestation, similarly, if the device fingerprint is invalid
+the device will not be allowed to attach to the basestation. In this
+scenario, the client would still be able to discover and connect to
+the device if they are on the same local network.
 
 ### Running the TCP tunnel example
 Go to the Nabto cloud console and retrieve a Product ID, a Device ID,
@@ -130,6 +147,16 @@ heatpump can be turned on by the following command:
 ```
 ./examples/heat_pump/heat_pump_client --set-power ON
 ```
+
+A few other examples could be:
+
+```
+./examples/heat_pump/heat_pump_client --set-target 24
+./examples/heat_pump/heat_pump_client --get
+./examples/heat_pump/heat_pump_client --users-list
+./examples/heat_pump/heat_pump_client --users-get --user User-0
+```
+
 
 The heat pump example also shows how the internal MDNS client can be
 used to scan for devices on the local network. This can be done using

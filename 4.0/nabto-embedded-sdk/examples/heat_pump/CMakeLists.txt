@@ -1,5 +1,7 @@
 set (CMAKE_CXX_STANDARD 14)
 
+find_package( Threads )
+
 set(src
   src/main.cpp
   src/heat_pump.cpp
@@ -10,6 +12,4 @@ set(src
 add_executable(heat_pump_device ${src})
 target_link_libraries(heat_pump_device nabto_device 3rdparty_tinycbor 3rdparty_gopt 3rdparty_json 3rdparty_cxxopts device_examples_common)
 
-if ("x_${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "x_Linux")
-  target_link_libraries(heat_pump_device pthread)
-endif()
+target_link_libraries( heat_pump_device ${CMAKE_THREAD_LIBS_INIT} )

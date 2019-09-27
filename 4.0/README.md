@@ -19,9 +19,6 @@
     trusted (but will be different than the OK codes in case of
     error).
   * Documentation is limited to annotation in header files.
-  * Device id and product id for embedded devices is not validated in
-    the basestation during attach (against the values entered in the
-    console), only the device's public key is validated.
   * Tunnels are leaked when a connection closes.
 
 ## Getting started

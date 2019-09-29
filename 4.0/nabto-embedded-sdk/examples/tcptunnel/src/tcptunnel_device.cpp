@@ -147,7 +147,7 @@ bool init_tcptunnel(const std::string& configFile, const std::string& productId,
         return false;
     }
 
-    std::cout << "Created new private key with fingerprint: " << fp << std::endl;
+    std::cout << "Created new keypair with public key fingerprint: " << fp << std::endl;
     nabto_device_string_free(fp);
     nabto_device_string_free(str);
 

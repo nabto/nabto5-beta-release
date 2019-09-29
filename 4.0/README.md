@@ -63,12 +63,12 @@ From the device build directory, initialize the device:
 ./examples/tcptunnel/tcptunnel_device --init -p <productId> -d <deviceId> -s a.devices.dev.nabto.net
 ```
 
-This creates a new private key for your tunnel and prints the
-fingerprint. This fingerprint must be configured for the device in the
+This creates a new keypair for your tunnel and prints the
+fingerprint of the public key. This fingerprint must be configured for the device in the
 Nabto Cloud Console. The `init` command also creates a file called
 `tcptunnel_device.json` with the configuration of your new device. If
-you already have a private key with its fingerprint configured in the
-Nabto Cloud Console, you can replace the created device private key in
+you already have a keypair with the public key fingerprint configured in the
+Nabto Cloud Console, you can replace the created device keypair in
 the JSON file.
 
 Once your device is configured, it can be started with:
@@ -106,7 +106,7 @@ device by connecting to `127.0.0.1:4242` on the client host.
 Similarly to the TCP tunnel example, you first need a Product ID, a
 Device ID and an App Server Key from the Nabto Cloud Console. Also
 like the TCP tunnel, the device must first be initialized to generate
-the `heat_pump_device.json` configuration file and a private key:
+the `heat_pump_device.json` configuration file and a keypair:
 
 ```
 ./examples/heat_pump/heat_pump_device --init -d <deviceId> -p <productId> -s a.devices.dev.nabto.net

@@ -29,7 +29,7 @@ void my_handler(int s){
 
 
 
-std::shared_ptr<nabto::client::Connection> createConnection(const std::string& configFile)
+std::shared_ptr<nabto::client::Connection> createConnection(const std::string& logLevel, const std::string& configFile)
 {
     json config;
     if(!json_config_load(configFile, config)) {
@@ -39,7 +39,11 @@ std::shared_ptr<nabto::client::Connection> createConnection(const std::string& c
 
     auto ctx = nabto::client::Context::create();
     ctx->setLogger(std::make_shared<MyLogger>());
-//    ctx->setLogLevel("trace");
+    if (!logLevel.empty()) {
+        ctx->setLogger(std::make_shared<MyLogger>());
+        ctx->setLogLevel(logLevel);
+    }
+
     auto connection = ctx->createConnection();
     connection->setProductId(config["ProductId"].get<std::string>());
     connection->setDeviceId(config["DeviceId"].get<std::string>());
@@ -56,11 +60,11 @@ std::shared_ptr<nabto::client::Connection> createConnection(const std::string& c
     return connection;
 }
 
-void tcptunnel(const std::string& configFile, uint16_t localPort, const std::string& remoteHost, uint16_t remotePort)
+void tcptunnel(const std::string& logLevel, const std::string& configFile, uint16_t localPort, const std::string& remoteHost, uint16_t remotePort)
 {
     std::cout << "Creating tunnel " << configFile << " local port " << localPort << " remote host " << remoteHost << " remote port " << remotePort << std::endl;
 
-    auto connection = createConnection(configFile);
+    auto connection = createConnection(logLevel, configFile);
 
     auto tunnel = connection->createTcpTunnel();
     tunnel->open(localPort, remoteHost, remotePort)->waitForResult();
@@ -80,11 +84,17 @@ void tcptunnel(const std::string& configFile, uint16_t localPort, const std::str
     connection->close();
 }
 
-void tcptunnel_pairing(const std::string& configFile, const std::string& productId, const std::string& deviceId, const std::string& server, const std::string& serverKey, const std::string& password)
+void tcptunnel_pairing(const std::string& logLevel, const std::string& configFile, const std::string& productId, const std::string& deviceId, const std::string& server, const std::string& serverKey, const std::string& password)
 {
     json config;
     std::cout << "Pairing with tcp tunnel " << productId << "." << deviceId << std::endl;
     auto ctx = nabto::client::Context::create();
+
+    if (!logLevel.empty()) {
+        ctx->setLogger(std::make_shared<MyLogger>());
+        ctx->setLogLevel(logLevel);
+    }
+
     auto connection = ctx->createConnection();
     connection->setProductId(productId);
     connection->setDeviceId(deviceId);
@@ -156,6 +166,7 @@ int main(int argc, char** argv)
         ("password-pairing", "Do a pairing with the device using a password")
         ("tcptunnel", "Create a tcp tunnel with the device.")
         ("c,config", "Configutation File", cxxopts::value<std::string>()->default_value("tcptunnel_client.json"))
+        ("log-level", "Log level (error|info|trace)", cxxopts::value<std::string>()->default_value(""))
         ;
 
     options.add_options("Pairing")
@@ -180,7 +191,8 @@ int main(int argc, char** argv)
 
     if (result.count("password-pairing")) {
         try {
-            tcptunnel_pairing(result["config"].as<std::string>(),
+            tcptunnel_pairing(result["log-level"].as<std::string>(),
+                              result["config"].as<std::string>(),
                               result["product"].as<std::string>(),
                               result["device"].as<std::string>(),
                               result["server"].as<std::string>(),
@@ -193,7 +205,8 @@ int main(int argc, char** argv)
         }
     } else if (result.count("tcptunnel")) {
         try {
-            tcptunnel(result["config"].as<std::string>(),
+            tcptunnel(result["log-level"].as<std::string>(),
+                      result["config"].as<std::string>(),
                       result["local-port"].as<uint16_t>(),
                       result["remote-host"].as<std::string>(),
                       result["remote-port"].as<uint16_t>());

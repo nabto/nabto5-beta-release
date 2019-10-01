@@ -88,7 +88,7 @@ client. First the client must be paired with the device. From the
 client build directory run:
 
 ```
-./examples/tcptunnel/tcptunnel_client --password-pairing --password secret123 -k <serverKey> -p <productId> -d <deviceId> -s https://nabto5.dev.nabto.net
+./examples/tcptunnel/tcptunnel_client --password-pairing --password secret123 -k <serverKey> -p <productId> -d <deviceId> -s https://a.clients.dev.nabto.net
 ```
 
 For now, the password is set to `secret123` in the device, which

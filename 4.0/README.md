@@ -1,5 +1,8 @@
 # Nabto 5 Beta 4.0
 
+## Breaking changes 
+ * New protocol - and basestation deployed to support this. Meaning that only beta4 peers can establish remote connections.
+
 ## Deliverables in this release
  * Tcp tunnelling support
  * Complete heat pump demo

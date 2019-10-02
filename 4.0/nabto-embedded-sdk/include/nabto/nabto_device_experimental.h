@@ -23,6 +23,15 @@ nabto_device_set_server_port(NabtoDevice* device, uint16_t port);
 NABTO_DEVICE_DECL_PREFIX NabtoDeviceError NABTO_DEVICE_API
 nabto_device_connection_get_client_fingerprint_hex(NabtoDevice* device, NabtoDeviceConnectionRef ref, char** fp);
 
+enum NabtoDeviceConnectionEvent {
+    NABTO_DEVICE_CONNECTION_EVENT_OPENED,
+    NABTO_DEVICE_CONNECTION_EVENT_CLOSED,
+    NABTO_DEVICE_CONNECTION_EVENT_CHANNEL_CHANGED
+};
+
+NABTO_DEVICE_DECL_PREFIX NabtoDeviceFuture NABTO_DEVICE_API
+nabto_device_listen_connection_event(NabtoDevice* device, NabtoDeviceConnectionRef* ref, enum NabtoDeviceConnectionEvent* event);
+
 /********
  * Util *
  ********/
@@ -54,6 +63,31 @@ typedef struct NabtoDeviceIamEnv_ NabtoDeviceIamEnv;
  * Callback when the iam system has been modified. The application can choose to persist the changes.
  */
 typedef void (*NabtoDeviceIamChangedCallback)(void* userData);
+
+
+/**
+ * Override iam check function This function is synchroniously called
+ * from the code, It's not allowed to call NabtoDevice api functions
+ * from this function.
+ */
+
+/**
+ * IAM check access callback function.
+ *
+ * @param attributes  cbor encoded attributes, if NULL no attributes is provided.
+ * @return NABTO_DEVICE_EC_OK if access is allowed.
+ *         NABTO_DEVICE_EC_IAM_DENY if access is not allowed.
+ */
+typedef NabtoDeviceError (*NabtoDeviceIAMCheckAccessCallback)(NabtoDeviceConnectionRef connectionReference, const char* action, void* attributes, size_t attributesLength, void* userData);
+
+/**
+ * Override iam check function This function is synchroniously called
+ * from the core, It's not allowed to call other NabtoDevice api
+ * functions from this function. Since the caller will have a lock on
+ * the system.
+ */
+NABTO_DEVICE_DECL_PREFIX NabtoDeviceError NABTO_DEVICE_API
+nabto_device_iam_override_check_access_implementation(NabtoDevice* device, NabtoDeviceIAMCheckAccessCallback cb, void* userData);
 
 /**
  * Dump all iam state in a single cbor object such that it can be

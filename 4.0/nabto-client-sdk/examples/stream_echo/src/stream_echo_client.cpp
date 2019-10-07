@@ -84,7 +84,7 @@ void run_stream_echo_client(const std::string& logLevel, const std::string& prod
     std::thread t(reader, stream);
 
     for (;;) {
-        char input;
+        std::string input;
         try {
             std::cin >> input;
         } catch (...) {
@@ -92,7 +92,7 @@ void run_stream_echo_client(const std::string& logLevel, const std::string& prod
             stream->close()->waitForResult();
             exit(1);
         }
-        auto buffer = std::make_shared<nabto::client::BufferImpl>(reinterpret_cast<const unsigned char*>(&input), 1);
+        auto buffer = std::make_shared<nabto::client::BufferImpl>(reinterpret_cast<const unsigned char*>(input.data()), input.size());
         stream->write(buffer)->waitForResult();
     }
 

@@ -38,10 +38,19 @@
       now returns void.
     * `nabto_device_log_set_*` functions renamed to `nabto_device_set_log_*`
 
+### Client SDK
+    * Most error codes has been stream lined.
+    * `nabto_client_free()` is split into stop and free.
+    * Futures have been slightly changed in the way they are used.
+    * Some function has changed name slightly
+    * Fingerprints from a connection is returned differently.
+
+
 ## Deliverables in this release
-    * JWT support in basestation.
+    * JWT support in the basestation, and in the client.
     * Listener API for recurring events like new streams or coap requests.
     * Listen for connection events and device events using new listener API.
+
 
 ## Improvements over last release
     * Many issues with properly closing the software was fixed
@@ -74,7 +83,10 @@
       module. This lacks documentation and the IAM module is subject
       to change. Therefore, the TCP tunnelling remains in the
       experimental header.
+
 ### Client SDK
+    * The client api does not yet have a stable api for detecting closed connections.
+    * TCP tunnels is still in experimental.
 
 
 ## Getting started

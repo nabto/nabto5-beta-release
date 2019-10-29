@@ -1,3 +1,6 @@
 [submodule "4.0/nabto-embedded-sdk/3rdparty/tinycbor/tinycbor"]
 	path = 4.0/nabto-embedded-sdk/3rdparty/tinycbor/tinycbor
 	url = https://github.com/intel/tinycbor.git
+[submodule "RC1/nabto-embedded-sdk/3rdparty/tinycbor/tinycbor"]
+	path = RC1/nabto-embedded-sdk/3rdparty/tinycbor/tinycbor
+	url = git@github.com:intel/tinycbor.git

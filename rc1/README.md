@@ -89,6 +89,7 @@
 ### Client SDK
 * The client api does not yet have a stable api for detecting closed connections.
 * TCP tunnels is still in experimental.
+* XCode emits a lot of warnings about the new parameter documentation style that indicates in/out parameter type, this will be fixed.
 
 ### Examples
     * The heatpump and tunnel client examples does not validate device fingerprints on reconnect.

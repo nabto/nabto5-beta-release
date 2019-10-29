@@ -2,96 +2,97 @@
 
 ## Breaking changes
 ### Embedded SDK
-    * Most error codes has been renamed
-    * `nabto_device_free()` is split into 2 so `nabto_device_stop()`
-      must now be called before free. Now free simply frees the
-      resources.
-    * `nabto_device_experimental_util_create_private_key()` renamed to
-      `nabto_device_create_private_key()`
-    * `nabto_device_stream_listen()` removed. Now use
-      `nabto_device_stream_init_listener()`, then
-      `nabto_device_listener_new_stream()` when ready to wait for a
-      new stream.
-    * Asynchronous functions no longer return a future, instead a
-      future is pre-allocated by the user with
-      `nabto_device_future_new()` and passed as an argument to the
-      asynchronous function. This allows a failing asynchronous
-      functions to always fail by resolving the future providing more
-      streamlined error handling.
-    * `nabto_device_coap_add_resource()` removed. COAP is now used in
-      the same way as streams where you initialize a listener and use
-      it to wait for incoming requests. With this pattern, the
-      `NabtoDeviceListener` replaces the `NabtoDeviceCoapResource`.
-    * `NabtoDeviceCoapResponse` is removed and is now allocated with
-      the request. This removes the need for
-      `nabto_device_coap_create_response()`. This also means that all
-      functions like `nabto_device_coap_response_*` now takes the
-      request instead of the now removed response structure.
-    * Incoming COAP requests must now be freed by the user with
-      `nabto_device_coap_request_free()`.
-    * Functions for resolving future now returns the error code of the
-      future when it resolves. Affected functions are
-      `nabto_device_future_wait()`,
-      `nabto_device_future_timed_wait()`,
-      `nabto_device_future_ready()`.
-    * `nabto_device_future_set_callback()` cannot fail. Therefore, it
-      now returns void.
-    * `nabto_device_log_set_*` functions renamed to `nabto_device_set_log_*`
+* Most error codes have been renamed
+* `nabto_device_free()` is split into 2 so `nabto_device_stop()`
+  must now be called before free. Now free simply frees the
+  resources.
+* `nabto_device_experimental_util_create_private_key()` renamed to
+  `nabto_device_create_private_key()`
+* `nabto_device_stream_listen()` removed. Now use
+  `nabto_device_stream_init_listener()`, then
+  `nabto_device_listener_new_stream()` when ready to wait for a
+  new stream.
+* Asynchronous functions no longer return a future, instead a
+  future is pre-allocated by the user with
+  `nabto_device_future_new()` and passed as an argument to the
+  asynchronous function. This allows a failing asynchronous
+  functions to always fail by resolving the future providing more
+  streamlined error handling.
+* `nabto_device_coap_add_resource()` removed. COAP is now used in
+  the same way as streams where you initialize a listener and use
+  it to wait for incoming requests. With this pattern, the
+  `NabtoDeviceListener` replaces the `NabtoDeviceCoapResource`.
+* `NabtoDeviceCoapResponse` is removed and is now allocated with
+  the request. This removes the need for
+  `nabto_device_coap_create_response()`. This also means that all
+  functions like `nabto_device_coap_response_*` now takes the
+  request instead of the now removed response structure.
+* Incoming COAP requests must now be freed by the user with
+  `nabto_device_coap_request_free()`.
+* Functions for resolving future now returns the error code of the
+  future when it resolves. Affected functions are
+  `nabto_device_future_wait()`,
+  `nabto_device_future_timed_wait()`,
+  `nabto_device_future_ready()`.
+* `nabto_device_future_set_callback()` cannot fail. Therefore, it
+  now returns void.
+* `nabto_device_log_set_*` functions renamed to `nabto_device_set_log_*`
 
 ### Client SDK
-    * Most error codes has been stream lined.
-    * `nabto_client_free()` is split into stop and free.
-    * Futures have been slightly changed in the way they are used.
-    * Some function has changed name slightly
-    * Fingerprints from a connection is returned differently.
-
+* Most error codes have been stream lined.
+* `nabto_client_free()` is split into stop and free.
+* Futures have been slightly changed in the way they are used.
+* Some function have changed name slightly
+* Fingerprints from a connection are returned differently.
 
 ## Deliverables in this release
-    * JWT support in the basestation, and in the client.
-    * Listener API for recurring events like new streams or coap requests.
-    * Listen for connection events and device events using new listener API.
+* JWT support in the basestation and in the client.
+* Listener API for recurring events like new streams or coap requests.
+* Listen for connection events and device events using new listener API.
 
 
 ## Improvements over last release
-    * Many issues with properly closing the software was fixed
-    * The APIs have been streamlined
+* Many issues with properly closing the software was fixed
+* The APIs have been streamlined
 
 ## Limitations and known issues in this release
 ### General
-    * Documentation is limited to annotation in header files.
+
+* Documentation is limited to annotation in header files.
+
 ### Embedded SDK
-    * When the embedded SDK is not closed nicely, the flow should be
-      to call `nabto_device_stop()` which will block untill the core
-      is aborted, then `nabto_device_free()` should be
-      called. Currently, `nabto_device_stop()` will hang
-      indefinately if `nabto_device_close()` is not called
-      first. This means the device currently only supports being
-      closed nicely.
-    * Under certain circumstances, embedded SDK streams can leak
-      stream segments. (This cannot happen with tunnel streams.)
-    * Some corner case errors are not handled in the embedded SDK,
-      mostly these are out-of-memory errors.
-    * Device events can be used to determine when a device becomes
-      attached/detached from the basestation. However, it is not
-      final which other events the device should emit. Therefore,
-      this functionallity remains in the experimental header.
-    * Changes in this release means it is no longer necessary for the
-      IAM module to be embedded as deeply into the core as it
-      is. Therefore, the IAM module remains in the experimental
-      header.
-    * The creation of TCP tunnels is restricted through the IAM
-      module. This lacks documentation and the IAM module is subject
-      to change. Therefore, the TCP tunnelling remains in the
-      experimental header.
+* When the embedded SDK is not closed nicely, the flow should be
+  to call `nabto_device_stop()` which will block untill the core
+  is aborted, then `nabto_device_free()` should be
+  called. Currently, `nabto_device_stop()` will hang
+  indefinately if `nabto_device_close()` is not called
+  first. This means the device currently only supports being
+  closed nicely.
+* Under certain circumstances, embedded SDK streams can leak
+  stream segments. (This cannot happen with tunnel streams.)
+* Some corner case errors are not handled in the embedded SDK,
+  mostly these are out-of-memory errors.
+* Device events can be used to determine when a device becomes
+  attached/detached from the basestation. However, it is not
+  final which other events the device should emit. Therefore,
+  this functionallity remains in the experimental header.
+* Changes in this release means it is no longer necessary for the
+  IAM module to be embedded as deeply into the core as it
+  is. Therefore, the IAM module remains in the experimental
+  header.
+* The creation of TCP tunnels is restricted through the IAM
+  module. This lacks documentation and the IAM module is subject
+  to change. Therefore, the TCP tunnelling remains in the
+  experimental header.
 
 ### Client SDK
-    * The client api does not yet have a stable api for detecting closed connections.
-    * TCP tunnels is still in experimental.
+* The client api does not yet have a stable api for detecting closed connections.
+* TCP tunnels is still in experimental.
 
 
 ## Getting started
 
-To get started using this release, first build both SDK's, then try
+To get started using this release, first build both SDKs, then try
 each example.
 
 ### building embedded SDK
@@ -111,7 +112,7 @@ make -j
 ```
 
 ### Note on local connections
-When running the examples, a App Server Key is required on the client,
+When running the examples, an App Server Key is required on the client,
 and the device fingerprint must be registered on the basestation. If
 the App Server Key is invalid, the client will not be allowed access
 to the basestation, similarly, if the device fingerprint is invalid

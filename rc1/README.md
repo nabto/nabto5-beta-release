@@ -59,6 +59,8 @@
 ## Limitations and known issues in this release
 ### General
     * Documentation is limited to annotation in header files.
+    * The headers should be considered stable, we will still work on
+      several improvements in the code, before the final release.
 ### Embedded SDK
     * When the embedded SDK is not closed nicely, the flow should be
       to call `nabto_device_stop()` which will block untill the core
@@ -87,6 +89,9 @@
 ### Client SDK
     * The client api does not yet have a stable api for detecting closed connections.
     * TCP tunnels is still in experimental.
+
+### Examples
+    * The heatpump and tunnel client examples does not validate device fingerprints on reconnect.
 
 
 ## Getting started

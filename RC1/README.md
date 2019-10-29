@@ -51,16 +51,29 @@
 ### General
     * Documentation is limited to annotation in header files.
 ### Embedded SDK
-    * When the embedded SDK is not closed nicely, the flow should be to
-      call `nabto_device_stop()` which will block untill the core is
-      aborted, then `nabto_device_free()` should be called. Currently,
-      `nabto_device_stop()` will hang indefinately if
-      `nabto_device_close()` is not called first. This means the device
-      currently only supports being closed nicely.
-      * Under certain circumstances, embedded SDK streams can leak stream
-      segments. (This cannot happen with tunnel streams.)
-      * Some corner case errors are not handled in the embedded SDK,
+    * When the embedded SDK is not closed nicely, the flow should be
+      to call `nabto_device_stop()` which will block untill the core
+      is aborted, then `nabto_device_free()` should be
+      called. Currently, `nabto_device_stop()` will hang
+      indefinately if `nabto_device_close()` is not called
+      first. This means the device currently only supports being
+      closed nicely.
+    * Under certain circumstances, embedded SDK streams can leak
+      stream segments. (This cannot happen with tunnel streams.)
+    * Some corner case errors are not handled in the embedded SDK,
       mostly these are out-of-memory errors.
+    * Device events can be used to determine when a device becomes
+      attached/detached from the basestation. However, it is not
+      final which other events the device should emit. Therefore,
+      this functionallity remains in the experimental header.
+    * Changes in this release means it is no longer necessary for the
+      IAM module to be embedded as deeply into the core as it
+      is. Therefore, the IAM module remains in the experimental
+      header.
+    * The creation of TCP tunnels is restricted through the IAM
+      module. This lacks documentation and the IAM module is subject
+      to change. Therefore, the TCP tunnelling remains in the
+      experimental header.
 ### Client SDK
 
 

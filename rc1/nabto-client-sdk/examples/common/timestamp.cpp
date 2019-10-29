@@ -1,5 +1,6 @@
 #include <timestamp.hpp>
 #include <chrono>
+#include <sstream>
 
 #include <iomanip>
 

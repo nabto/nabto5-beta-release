@@ -451,12 +451,15 @@ class CoapImpl : public Coap {
 
 
 class StreamImpl : public Stream {
- public:
+public:
     StreamImpl(NabtoClientConnection* connection, NabtoClient* context)
-        : context_(context)
-    {
-        stream_ = nabto_client_stream_new(connection);
-    }
+        : context_(context), connection_(connection)
+        {
+            stream_ = nabto_client_stream_new(connection);
+            NabtoClientConnectionType type;
+            nabto_client_connection_get_type(connection, &type);
+            printf(" *** opening stream on %s connection\n", type == NABTO_CLIENT_CONNECTION_TYPE_RELAY ? "RELAY" : "P2P");
+        }
     ~StreamImpl() {
         nabto_client_stream_free(stream_);
     }
@@ -485,6 +488,9 @@ class StreamImpl : public Stream {
     std::shared_ptr<FutureVoid> write(std::shared_ptr<Buffer> data)
     {
         auto future = std::make_shared<FutureVoidImpl>(context_, data);
+        NabtoClientConnectionType type;
+        nabto_client_connection_get_type(connection_, &type);
+        printf(" *** writing to stream on %s connection\n", type == NABTO_CLIENT_CONNECTION_TYPE_RELAY ? "RELAY" : "P2P");
         nabto_client_stream_write(stream_, future->getFuture(), data->data(), data->size());
         return future;
     }
@@ -494,9 +500,11 @@ class StreamImpl : public Stream {
         nabto_client_stream_close(stream_, future->getFuture());
         return future;
     }
- private:
+    private:
     NabtoClientStream* stream_;
     NabtoClient* context_;
+    NabtoClientConnection* connection_;
+
 };
 
 class TcpTunnelImpl : public TcpTunnel {
